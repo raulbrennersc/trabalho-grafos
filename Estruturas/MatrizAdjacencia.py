@@ -35,6 +35,11 @@ class MatrizAdjacencia:
                 self.matriz[v1.nome][v2.nome] = d
                 self.matriz[v2.nome][v1.nome] = d
 
+#Imprime as informacoes sobre todos os vertices contidos na matriz
+    def imprimirVertices(self):
+        for v in self.vertices:
+            print(v.nome + ": Regiao: " + v.regiao.nome)
+
 
     def __str__(self):
         saida = "\t"

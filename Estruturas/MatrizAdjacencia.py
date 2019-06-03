@@ -16,22 +16,11 @@ class MatrizAdjacencia:
             self.matriz[v.nome][chave] = ""
             self.matriz[chave][v.nome] = ""
 
-    def adicionaAresta(self, nomeV1, nomeV2, relacao):
-        if(self.matriz[nomeV1][nomeV2] != ""):
-            return "Ja ha uma relacao entre os vertices"
-        self.matriz[nomeV1][nomeV2] = relacao
-        self.matriz[nomeV2][nomeV1] = relacao
-
-    def imprimir(self):
-        for v1 in self.vertices:
-            for v2 in self.vertices:
-                print(self.matriz[v1.nome][v2.nome])
-
 #Calcula a distancia entre dois pontos no plano
     def calcularDistancias(self):
         for v1 in self.vertices:
             for v2 in self.vertices:
-                d = ((((v1.x - v2.x) ** 2) + ((v1.y - v2.y) ** 2) )** 0.5)
+                d = retornaDistancia(v1, v2)
                 self.matriz[v1.nome][v2.nome] = d
                 self.matriz[v2.nome][v1.nome] = d
 
@@ -53,21 +42,8 @@ class MatrizAdjacencia:
             saida += "\n"
         return saida
 
-    def saoVizinhos(self, v1, v2):
-        if(v1 not in self.matriz):
-            return False
-        if(v2 not in self.matriz):
-            return False
-        if(self.matriz[v1][v2] == ""):
-            return False
-        return True
+    def saoConterraneos(self, v1, v2):
+        return v1.regiao.nome == v2.regiao.nome
 
-    def getVizinhos(self, v):
-        vizinhos = []
-        for chave in self.matriz:
-            if(self.matriz[v][chave] != ""):
-                vizinhos.append(chave)
-        return vizinhos
-
-    def retornaRelacao(self, v1, v2):
-        return self.matriz[v1][v2]
+    def retornaDistancia(self, v1, v2):
+        return ((((v1.x - v2.x) ** 2) + ((v1.y - v2.y) ** 2) )** 0.5)

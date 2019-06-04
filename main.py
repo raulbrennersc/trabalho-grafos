@@ -1,9 +1,11 @@
 import sys
+import time
 from Estruturas.Vertice import Vertice
 from Estruturas.Regiao import Regiao
 from Estruturas.MatrizAdjacencia import MatrizAdjacencia
 
 def main():
+    start = time.time()
     print("START")
     pathArquivoEntrada = sys.argv[2] + ".txt"
     pathArquivoSaida = sys.argv[4] + ".txt"
@@ -60,6 +62,9 @@ def main():
         matriz.adicionaVertice(v)
 
     matriz.calcularDistancias()
-    matriz.imprimirVertices(pathArquivoSaida)
+    ##matriz.imprimirVertices(pathArquivoSaida)
+    end = time.time()
+    timeElapsed = (end-start)*1000
+    print("Executado em: " + str(timeElapsed) + " ms")
 
 main()

@@ -32,6 +32,7 @@ class MatrizAdjacencia:
         f = open(pathArquivoSaida, "w")
         for v in self.vertices:
             f.write(v.nome + ": Regiao: " + v.regiao.nome + "\n")
+        f.close()
 
 
     def __str__(self):

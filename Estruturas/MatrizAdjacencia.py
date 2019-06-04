@@ -16,11 +16,14 @@ class MatrizAdjacencia:
             self.matriz[v.nome][chave] = ""
             self.matriz[chave][v.nome] = ""
 
+    def retornaDistancia(self, v1, v2):
+        return ((((v1.x - v2.x) ** 2) + ((v1.y - v2.y) ** 2) )** 0.5)
+        
 #Calcula a distancia entre dois pontos no plano
     def calcularDistancias(self):
         for v1 in self.vertices:
             for v2 in self.vertices:
-                d = retornaDistancia(v1, v2)
+                d = self.retornaDistancia(v1, v2)
                 self.matriz[v1.nome][v2.nome] = d
                 self.matriz[v2.nome][v1.nome] = d
 
@@ -45,5 +48,3 @@ class MatrizAdjacencia:
     def saoConterraneos(self, v1, v2):
         return v1.regiao.nome == v2.regiao.nome
 
-    def retornaDistancia(self, v1, v2):
-        return ((((v1.x - v2.x) ** 2) + ((v1.y - v2.y) ** 2) )** 0.5)

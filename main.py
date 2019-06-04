@@ -11,7 +11,6 @@ def main():
     pathArquivoSaida = sys.argv[4] + ".txt"
     vertices = []
     lines = []
-    matriz = MatrizAdjacencia()
 
 
     file = open(pathArquivoEntrada, "r")
@@ -30,6 +29,7 @@ def main():
     line = lines.pop()
     capacity = line.split(" ").pop()
 
+    matriz = MatrizAdjacencia(capacity, vehicles_count)
 
     lines.pop()
     lines.pop()

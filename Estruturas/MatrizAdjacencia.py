@@ -3,10 +3,15 @@ from Estruturas.Vertice import Vertice
 class MatrizAdjacencia:
     matriz = None
     vertices = None
+    capacidadeVeiculo = None
+    quantidadeVeiculos = None
 
-    def __init__(self):
+
+    def __init__(self, capacidadeVeiculo, quantidadeVeiculos):
         self.matriz = {}
         self.vertices = []
+        self.capacidadeVeiculo = capacidadeVeiculo
+        self.quantidadeVeiculos = quantidadeVeiculos
 
     def adicionaVertice(self, v):
         self.vertices.append(v)
@@ -15,6 +20,10 @@ class MatrizAdjacencia:
         for chave in self.matriz:
             self.matriz[v.nome][chave] = ""
             self.matriz[chave][v.nome] = ""
+
+    def encontraCaminho(self):
+        regioesVisitadas = []
+        return
 
     def retornaDistancia(self, v1, v2):
         return ((((v1.x - v2.x) ** 2) + ((v1.y - v2.y) ** 2) )** 0.5)

@@ -10,6 +10,7 @@ def main():
     pathArquivoEntrada = sys.argv[2] + ".txt"
     pathArquivoSaida = sys.argv[4] + ".txt"
     vertices = []
+    regioes = []
     lines = []
 
 
@@ -36,35 +37,40 @@ def main():
 
     line = lines.pop()
     while (line != "SET_SECTION"):
-
         arr = line.split(" ")
         v = Vertice(arr[0], int(arr[1]), int(arr[2]))
         vertices.append(v)
         line = lines.pop()
 
+    line = lines.pop()
     while(line != "DEMAND_SECTION"):
         arr = line.split(" ")
+        arr.pop()
         arr.reverse()
-        regiao = Regiao(arr.pop(), "")
-        for v in vertices:
-            if(v.nome in arr):
-                v.regiao = regiao
+        nomeRegiao = arr.pop()
+        regiao = Regiao(nomeRegiao, arr)
+        regioes.append(regiao)
         line = lines.pop()
     
+    for regiao in regioes:
+        for v in vertices:
+            if(v.nome in regiao.vertices):
+                v.regiao = regiao
+
     while(line != "EOF"):
         arr = line.split(" ")
-        for v in vertices:
-            if(v.regiao.nome == arr[0]):
-                v.regiao.demanda = arr[1]
+        for regiao in regioes:
+            if(regiao.nome == arr[0]):
+                regiao.demanda = arr[1]
         line = lines.pop()
 
     for v in vertices:
         matriz.adicionaVertice(v)
 
     matriz.calcularDistancias()
-    ##matriz.imprimirVertices(pathArquivoSaida)
+    matriz.imprimirVertices(pathArquivoSaida)
     end = time.time()
     timeElapsed = (end-start)*1000
-    print("Executado em: " + str(timeElapsed) + " ms")
+    print("\nExecutado em: " + str(timeElapsed) + " ms")
 
 main()

@@ -1,8 +1,10 @@
 class Regiao:
     nome = None
     demanda = None
+    vertices = None
 
 
-    def __init__(self, nome, demanda):
+    def __init__(self, nome, vertices):
         self.nome = nome
-        self.demanda = demanda
+        self.demanda = ""
+        self.vertices = vertices

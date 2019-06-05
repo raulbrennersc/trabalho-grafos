@@ -11,7 +11,7 @@ class MatrizAdjacencia:
     capacidadeVeiculo = 0
     quantidadeVeiculos = 0
     distanciaPercorrida = 0
-    menorDemanda = 0
+    menorDemanda = None
 
 
     def __init__(self, capacidadeVeiculo, quantidadeVeiculos, vertices, regioes):
@@ -36,9 +36,9 @@ class MatrizAdjacencia:
             self.matriz[v] = {}
 
     def calcularMenorDemanda(self):
-        for r in self.regioes:
-            if(self.menorDemanda == 0 or r.demanda < self.menorDemanda):
-                self.menorDemanda = r.demanda
+        for r in self.regioesNaoVisitadas:
+            if(self.menorDemanda == None or self.menorDemanda.demanda == 0 or r.demanda < self.menorDemanda.demanda):
+                self.menorDemanda = r
 
     def adicionaRegiao(self, r):
         self.regioes.append(r)
@@ -66,7 +66,7 @@ class MatrizAdjacencia:
             melhorVeiculo.verticeAtual = melhorVertice
             self.regioesNaoVisitadas.remove(melhorVertice.regiao)
             self.calcularMenorDemanda()
-            if(melhorVeiculo.capacidade < self.menorDemanda):
+            if(melhorVeiculo.capacidade < self.menorDemanda.demanda):
                 self.retornaVeiculo(veiculo)
         
         for v in self.veiculos:
@@ -77,7 +77,8 @@ class MatrizAdjacencia:
         f.write(str(self.distanciaPercorrida))
         f.write("\n")
         for v in self.veiculos:
-            f.write(v.caminho)
+            for c in v.caminho:
+                f.write(c + " ")
             f.write("\n")
         f.close()
 

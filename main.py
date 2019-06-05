@@ -22,15 +22,14 @@ def main():
     lines.reverse()
     
     line = lines.pop()
-    dimension = line.split(" ").pop()
+    dimension = int(line.split(" ").pop())
     line = lines.pop()
-    vehicles_count = line.split(" ").pop()
+    vehicles_count = int(line.split(" ").pop())
     line = lines.pop()
-    sets_count = line.split(" ").pop()
+    sets_count = int(line.split(" ").pop())
     line = lines.pop()
-    capacity = line.split(" ").pop()
+    capacity = int(line.split(" ").pop())
 
-    matriz = MatrizAdjacencia(capacity, vehicles_count)
 
     lines.pop()
     lines.pop()
@@ -61,14 +60,14 @@ def main():
         arr = line.split(" ")
         for regiao in regioes:
             if(regiao.nome == arr[0]):
-                regiao.demanda = arr[1]
+                regiao.demanda = int(arr[1])
         line = lines.pop()
 
-    for v in vertices:
-        matriz.adicionaVertice(v)
+    matriz = MatrizAdjacencia(capacity, vehicles_count, vertices, regioes)
 
     matriz.calcularDistancias()
-    matriz.imprimirVertices(pathArquivoSaida)
+    matriz.encontraCaminho(pathArquivoSaida)
+    #matriz.imprimirVertices(pathArquivoSaida)
     end = time.time()
     timeElapsed = (end-start)*1000
     print("\nExecutado em: " + str(timeElapsed) + " ms")

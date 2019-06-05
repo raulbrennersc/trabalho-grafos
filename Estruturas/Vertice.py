@@ -8,6 +8,6 @@ class Vertice:
 
     def __init__(self, nome, x, y):
         self.nome = nome
-        self.regiao = Regiao("0", 0)
+        self.regiao = Regiao("0", "")
         self.x = x
         self.y = y

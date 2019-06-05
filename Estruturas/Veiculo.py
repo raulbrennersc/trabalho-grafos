@@ -2,10 +2,10 @@ from Estruturas.Vertice import Vertice
 class Veiculo:
     capacidade = 0
     verticeAtual = Vertice
-    caminho = None
+    caminho = []
 
 
     def __init__(self, capacidade, vertice):
         self.capacidade = capacidade
-        self.vertice = vertice
-        self.caminho = ["1"]
+        self.verticeAtual = vertice
+        self.caminho.append("1")

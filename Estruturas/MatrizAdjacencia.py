@@ -6,25 +6,28 @@ class MatrizAdjacencia:
     matriz = None
     vertices = [Vertice]
     regioes = [Regiao]
-    regioesVisitadas = [Regiao]
+    regioesNaoVisitadas = [Regiao]
     veiculos = [Veiculo]
     capacidadeVeiculo = 0
     quantidadeVeiculos = 0
     distanciaPercorrida = 0
+    menorDemanda = 0
 
 
     def __init__(self, capacidadeVeiculo, quantidadeVeiculos, vertices, regioes):
         self.matriz = {}
         self.vertices = vertices
         self.regioes = regioes
-        self.regioesVisitadas = self.regioes.copy()
+        self.regioesNaoVisitadas = self.regioes.copy()
         self.capacidadeVeiculo = capacidadeVeiculo
         self.quantidadeVeiculos = quantidadeVeiculos
         distanciaPercorrida = 0
 
-        for i in range(0, quantidadeVeiculos):
+        for i in range(1, quantidadeVeiculos):
             v = Veiculo(capacidadeVeiculo, self.vertices[0])
             self.veiculos.append(v)
+
+        self.calcularMenorDemanda()
 
         self.adicionaVertices()
 
@@ -32,11 +35,16 @@ class MatrizAdjacencia:
         for v in self.vertices:
             self.matriz[v] = {}
 
+    def calcularMenorDemanda(self):
+        for r in self.regioes:
+            if(self.menorDemanda == 0 or r.demanda < self.menorDemanda):
+                self.menorDemanda = r.demanda
+
     def adicionaRegiao(self, r):
         self.regioes.append(r)
 
     def encontraCaminho(self, pathArquivoSaida):
-        while(len(self.regioesVisitadas) > 0):
+        while(len(self.regioesNaoVisitadas) > 0):
             melhorVeiculo = Veiculo
             melhorVertice = None
             melhorDistancia = 0
@@ -44,26 +52,39 @@ class MatrizAdjacencia:
                 if(veiculo.capacidade == 0 ):
                     continue
                 verticeCandidato =  self.escolherVertice(veiculo)
-                if((melhorVertice == None) or (self.matriz[veiculo][verticeCandidato] < melhorDistancia)):
+                if(verticeCandidato == None):
+                    continue
+                if((melhorVertice == None) or (self.matriz[veiculo.verticeAtual][verticeCandidato] < melhorDistancia)):
                     melhorVeiculo = veiculo
                     melhorVertice = verticeCandidato
-                    melhorDistancia = self.matriz[veiculo.vertice][verticeCandidato]
-            
+                    melhorDistancia = self.matriz[veiculo.verticeAtual][verticeCandidato]
+
             self.distanciaPercorrida += melhorDistancia
             melhorVeiculo.capacidade -= melhorVertice.regiao.demanda
             melhorVeiculo.caminho.append(melhorVertice.nome)
             melhorVertice.regiao.demanda = 0
-            regioesVisitadas.remove(melhorVertice.regiao)
+            melhorVeiculo.verticeAtual = melhorVertice
+            self.regioesNaoVisitadas.remove(melhorVertice.regiao)
+            self.calcularMenorDemanda()
+            if(melhorVeiculo.capacidade < self.menorDemanda):
+                self.retornaVeiculo(veiculo)
+        
+        for v in self.veiculos:
+            if(v.verticeAtual != self.vertices[0]):
+                self.retornaVeiculo(veiculo)
 
         f = open(pathArquivoSaida, "w")
-        f.write(distanciaPercorrida)
+        f.write(str(self.distanciaPercorrida))
         f.write("\n")
         for v in self.veiculos:
             f.write(v.caminho)
             f.write("\n")
         f.close()
 
-        
+    def retornaVeiculo(self, veiculo):
+        veiculo.capacidade = self.capacidadeVeiculo
+        self.distanciaPercorrida += self.matriz[veiculo.verticeAtual][self.vertices[0]]
+        veiculo.caminho.append(self.vertices[0].nome)
 
     def escolherVertice(self, veiculo):
         verticeCandidato = None
@@ -72,29 +93,19 @@ class MatrizAdjacencia:
             if(v.regiao != verticeAtual.regiao and v.regiao.demanda > 0 and veiculo.capacidade >= v.regiao.demanda):
                 if((verticeCandidato == None) or (self.matriz[verticeAtual][v] < self.matriz[verticeAtual][verticeCandidato])):
                     verticeCandidato = v
-        return verticeAtual
+        return verticeCandidato
 
 
     def verificaVeiculos(self, verticeCanditato, veiculoCandidato, distanciaCandidata):
         veiculoFinal = veiculoCandidato
         distanciaFinal = distanciaCandidata
         for veiculo in self.veiculos:
-            distanciaParcial = self.matriz[verticeCanditato][veiculo.vertice]
+            distanciaParcial = self.matriz[verticeCanditato][veiculo.verticeAtual]
             if(veiculo.capacidade > verticeCanditato.demanda and distanciaParcial < distanciaFinal):
                 veiculoFinal = veiculo
                 distanciaFinal = distanciaParcial
 
         self.distanciaPercorrida += distanciaFinal
-
-        
-
-        
-
-        
-        
-
-
-
 
 
     def calcularDistancia(self, v1, v2):

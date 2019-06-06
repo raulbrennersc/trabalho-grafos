@@ -57,7 +57,7 @@ class MatrizAdjacencia:
                     melhorVeiculo = veiculo
                     melhorVertice = verticeCandidato
                     melhorDistancia = self.matriz[melhorVeiculo.verticeAtual][melhorVertice]
-
+            
             self.distanciaPercorrida += melhorDistancia
             melhorVeiculo.capacidade -= melhorVertice.regiao.demanda
             melhorVeiculo.caminho.append(melhorVertice.nome)
@@ -68,9 +68,8 @@ class MatrizAdjacencia:
             if(melhorVeiculo.capacidade < self.menorDemanda.demanda):
                 self.resetaVeiculo(veiculo)
         
-        for v in self.veiculos:
-            if(v.verticeAtual != self.vertices[0]):
-                self.resetaVeiculo(v)
+        self.resetaVeiculos()
+        
 
         f = open(pathArquivoSaida, "w")
         f.write(str(self.distanciaPercorrida))
@@ -80,6 +79,11 @@ class MatrizAdjacencia:
                 f.write(c + " ")
             f.write("\n")
         f.close()
+
+    def resetaVeiculos(self):
+        for v in self.veiculos:
+            if(v.verticeAtual != self.vertices[0]):
+                self.resetaVeiculo(v)
 
     def resetaVeiculo(self, veiculo):
         veiculo.capacidade = self.capacidadeVeiculo

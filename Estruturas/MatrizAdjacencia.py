@@ -50,8 +50,6 @@ class MatrizAdjacencia:
             melhorVertice = None
             melhorDistancia = 0
             for veiculo in self.veiculos:
-                if(veiculo.capacidade == 0 ):
-                    continue
                 verticeCandidato =  self.escolherVertice(veiculo)
                 if(verticeCandidato == None):
                     continue

@@ -55,10 +55,17 @@ class MatrizAdjacencia:
             melhorVertice = None
             melhorDistancia = 0
             for veiculo in self.veiculos:
+                parPerfeito = self.parPerfeito(veiculo)
+                if(parPerfeito != None):
+                    melhorVeiculo = veiculo
+                    melhorVertice = parPerfeito
+                    melhorDistancia = self.matriz[melhorVeiculo.verticeAtual][melhorVertice]
+                    break
+
                 verticeCandidato =  self.escolherVertice(veiculo)
                 if(verticeCandidato == None):
                     continue
-                if((melhorVertice == None) or (self.matriz[veiculo.verticeAtual][verticeCandidato] <= melhorDistancia)):
+                if((melhorVertice == None) or (self.matriz[veiculo.verticeAtual][verticeCandidato] < melhorDistancia)):
                     melhorVeiculo = veiculo
                     melhorVertice = verticeCandidato
                     melhorDistancia = self.matriz[melhorVeiculo.verticeAtual][melhorVertice]
@@ -108,24 +115,21 @@ class MatrizAdjacencia:
         for v in self.vertices:
             if(v.regiao != verticeAtual.regiao and v.regiao.demanda > 0 and veiculo.capacidade >= v.regiao.demanda):
                 if((verticeCandidato == None) or (self.matriz[verticeAtual][v] < self.matriz[verticeAtual][verticeCandidato])):
-                    if(self.simulaEscolha(veiculo, v)):
-                        verticeCandidato = v
+                    verticeCandidato = v
         return verticeCandidato
 
-    def simulaEscolha(self, veiculo, vertice):
-        novaCapacidade = veiculo.capacidade - vertice.regiao.demanda
+    def parPerfeito(self, veiculo):
+        melhorVertice = None
         for r in self.regioesNaoVisitadas:
-            possivel = False
-            demanda = (0 if(r.nome == vertice.regiao.nome) else r.demanda)
-            for v in self.veiculos:
-                capacidade = (novaCapacidade if(v.nome == vertice.nome) else v.capacidade)
-                if(capacidade >= demanda):
-                    possivel = True
-            if(not possivel):
-                print("False")
-                return False
-        return True
-
+            if(r.demanda == veiculo.capacidade):
+                for v in self.vertices:
+                    if(v.regiao.nome != r.nome):
+                        continue
+                    if(melhorVertice == None or (self.matriz[veiculo.verticeAtual][v] <  self.matriz[veiculo.verticeAtual][melhorVertice])):
+                        melhorVertice = v
+            if(melhorVertice != None):
+                break;
+        return melhorVertice
 
     def verificaVeiculos(self, verticeCanditato, veiculoCandidato, distanciaCandidata):
         veiculoFinal = veiculoCandidato

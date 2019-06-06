@@ -56,7 +56,7 @@ class MatrizAdjacencia:
                 if((melhorVertice == None) or (self.matriz[veiculo.verticeAtual][verticeCandidato] < melhorDistancia)):
                     melhorVeiculo = veiculo
                     melhorVertice = verticeCandidato
-                    melhorDistancia = self.matriz[veiculo.verticeAtual][verticeCandidato]
+                    melhorDistancia = self.matriz[melhorVeiculo.verticeAtual][melhorVertice]
 
             self.distanciaPercorrida += melhorDistancia
             melhorVeiculo.capacidade -= melhorVertice.regiao.demanda

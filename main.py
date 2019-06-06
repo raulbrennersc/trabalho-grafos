@@ -69,7 +69,7 @@ def main():
     matriz.encontraCaminho(pathArquivoSaida)
     #matriz.imprimirVertices(pathArquivoSaida)
     end = time.time()
-    timeElapsed = (end-start)*1000
-    print("\nExecutado em: " + str(timeElapsed) + " ms")
+    timeElapsed = round((end-start)*1000, 2)
+    print("\nExecutado em: " + str(timeElapsed) + " segundos")
 
 main()

@@ -69,12 +69,10 @@ class MatrizAdjacencia:
             melhorVeiculo.verticeAtual = melhorVertice
             self.regioesNaoVisitadas.remove(melhorVertice.regiao)
             self.calcularMenorDemanda()
-            if(melhorVeiculo.capacidade < self.menorDemanda.demanda):
-                self.resetaVeiculo(veiculo)
         
         self.resetaVeiculos()
         
-
+        print("Distancia: " + str(self.distanciaPercorrida))
         f = open(pathArquivoSaida, "w")
         f.write(str(self.distanciaPercorrida))
         f.write("\n")

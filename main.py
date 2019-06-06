@@ -5,7 +5,7 @@ from Estruturas.Regiao import Regiao
 from Estruturas.MatrizAdjacencia import MatrizAdjacencia
 
 def main():
-    start = time.time()
+    start = time.process_time()
     print("START")
     pathArquivoEntrada = sys.argv[2] + ".txt"
     pathArquivoSaida = sys.argv[4] + ".txt"
@@ -68,8 +68,8 @@ def main():
     matriz.calcularDistancias()
     matriz.encontraCaminho(pathArquivoSaida)
     #matriz.imprimirVertices(pathArquivoSaida)
-    end = time.time()
-    timeElapsed = round((end-start)*1000, 2)
+    end = time.process_time()
+    timeElapsed = round((end-start), 5)
     print("\nExecutado em: " + str(timeElapsed) + " segundos")
 
 main()

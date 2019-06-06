@@ -25,6 +25,7 @@ class MatrizAdjacencia:
 
         for i in range(0, quantidadeVeiculos):
             v = Veiculo(capacidadeVeiculo, self.vertices[0])
+            v.nome = i
             v.caminho = [vertices[0].nome]
             self.veiculos.append(v)
 
@@ -57,11 +58,20 @@ class MatrizAdjacencia:
                 verticeCandidato =  self.escolherVertice(veiculo)
                 if(verticeCandidato == None):
                     continue
-                if((melhorVertice == None) or (self.matriz[veiculo.verticeAtual][verticeCandidato] < melhorDistancia)):
+                if((melhorVertice == None) or (self.matriz[veiculo.verticeAtual][verticeCandidato] <= melhorDistancia)):
                     melhorVeiculo = veiculo
                     melhorVertice = verticeCandidato
                     melhorDistancia = self.matriz[melhorVeiculo.verticeAtual][melhorVertice]
-            
+            print("Regioes")
+            for r in self.regioesNaoVisitadas:
+                print(r.nome)
+                print(r.demanda)
+                print("------------------")
+            print("Veiculos")
+            for v in self.veiculos:
+                print(v.nome)
+                print(v.capacidade)
+                print("------------------")
             self.distanciaPercorrida += melhorDistancia
             melhorVeiculo.capacidade -= melhorVertice.regiao.demanda
             melhorVeiculo.caminho.append(melhorVertice.nome)
@@ -98,8 +108,23 @@ class MatrizAdjacencia:
         for v in self.vertices:
             if(v.regiao != verticeAtual.regiao and v.regiao.demanda > 0 and veiculo.capacidade >= v.regiao.demanda):
                 if((verticeCandidato == None) or (self.matriz[verticeAtual][v] < self.matriz[verticeAtual][verticeCandidato])):
-                    verticeCandidato = v
+                    if(self.simulaEscolha(veiculo, v)):
+                        verticeCandidato = v
         return verticeCandidato
+
+    def simulaEscolha(self, veiculo, vertice):
+        novaCapacidade = veiculo.capacidade - vertice.regiao.demanda
+        for r in self.regioesNaoVisitadas:
+            possivel = False
+            demanda = (0 if(r.nome == vertice.regiao.nome) else r.demanda)
+            for v in self.veiculos:
+                capacidade = (novaCapacidade if(v.nome == vertice.nome) else v.capacidade)
+                if(capacidade >= demanda):
+                    possivel = True
+            if(not possivel):
+                print("False")
+                return False
+        return True
 
 
     def verificaVeiculos(self, verticeCanditato, veiculoCandidato, distanciaCandidata):

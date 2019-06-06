@@ -28,6 +28,10 @@ class MatrizAdjacencia:
             v.caminho = [vertices[0].nome]
             self.veiculos.append(v)
 
+        for r in self.regioes:
+            if(r.demanda <= 0):
+                self.regioesNaoVisitadas.remove(r)
+
         self.calcularMenorDemanda()
 
         self.adicionaVertices()

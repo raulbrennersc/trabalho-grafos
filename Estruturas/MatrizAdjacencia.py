@@ -4,10 +4,10 @@ from Estruturas.Veiculo import Veiculo
 
 class MatrizAdjacencia:
     matriz = None
-    vertices = [Vertice]
-    regioes = [Regiao]
-    regioesNaoVisitadas = [Regiao]
-    veiculos = [Veiculo]
+    vertices = []
+    regioes = []
+    regioesNaoVisitadas = []
+    veiculos = []
     capacidadeVeiculo = 0
     quantidadeVeiculos = 0
     distanciaPercorrida = 0
@@ -23,8 +23,9 @@ class MatrizAdjacencia:
         self.quantidadeVeiculos = quantidadeVeiculos
         distanciaPercorrida = 0
 
-        for i in range(1, quantidadeVeiculos):
+        for i in range(0, quantidadeVeiculos):
             v = Veiculo(capacidadeVeiculo, self.vertices[0])
+            v.caminho = [vertices[0].nome]
             self.veiculos.append(v)
 
         self.calcularMenorDemanda()
@@ -67,11 +68,11 @@ class MatrizAdjacencia:
             self.regioesNaoVisitadas.remove(melhorVertice.regiao)
             self.calcularMenorDemanda()
             if(melhorVeiculo.capacidade < self.menorDemanda.demanda):
-                self.retornaVeiculo(veiculo)
+                self.resetaVeiculo(veiculo)
         
         for v in self.veiculos:
             if(v.verticeAtual != self.vertices[0]):
-                self.retornaVeiculo(veiculo)
+                self.resetaVeiculo(v)
 
         f = open(pathArquivoSaida, "w")
         f.write(str(self.distanciaPercorrida))
@@ -82,7 +83,7 @@ class MatrizAdjacencia:
             f.write("\n")
         f.close()
 
-    def retornaVeiculo(self, veiculo):
+    def resetaVeiculo(self, veiculo):
         veiculo.capacidade = self.capacidadeVeiculo
         self.distanciaPercorrida += self.matriz[veiculo.verticeAtual][self.vertices[0]]
         veiculo.caminho.append(self.vertices[0].nome)

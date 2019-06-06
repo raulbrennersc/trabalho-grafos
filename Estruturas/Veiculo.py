@@ -8,4 +8,3 @@ class Veiculo:
     def __init__(self, capacidade, vertice):
         self.capacidade = capacidade
         self.verticeAtual = vertice
-        self.caminho.append("1")

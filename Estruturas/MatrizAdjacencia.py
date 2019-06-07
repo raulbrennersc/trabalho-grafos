@@ -1,3 +1,4 @@
+import time
 from Estruturas.Vertice import Vertice
 from Estruturas.Regiao import Regiao
 from Estruturas.Veiculo import Veiculo
@@ -49,6 +50,7 @@ class MatrizAdjacencia:
 
 
     def encontraCaminho2(self, pathArquivoSaida):
+        inicio = time.time()
         for veiculo in self.veiculos:
             while(veiculo.capacidade >= self.menorDemanda.demanda and len(self.regioesNaoVisitadas) > 0):
                 melhorVertice =  self.escolherVertice(veiculo)
@@ -66,10 +68,10 @@ class MatrizAdjacencia:
         
         self.resetaVeiculos()
         
-        print("Distancia: " + str(self.distanciaPercorrida))
+        tempoGasto = str(round((time.time() - inicio), 5))
+        print("Distancia: " + str(round(self.distanciaPercorrida, 2)))
         f = open(pathArquivoSaida, "a")
-        f.write(str(self.distanciaPercorrida))
-        f.write("\n")
+        f.write(str(round(self.distanciaPercorrida, 2)) + " " + tempoGasto + "\n")
         for v in self.veiculos:
             for c in v.caminho:
                 f.write(c + " ")

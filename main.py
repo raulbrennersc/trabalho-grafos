@@ -18,7 +18,7 @@ def main():
     rawLines = file.readlines()
     file.close()
     file = open(pathArquivoSaida, "a")
-    file.write(sys.argv[2].split("/").pop() + "\n")
+    file.write(sys.argv[2].split("/").pop() + " ")
     file.close()
     for line in rawLines:
         lines.append(line.replace("\n", ""))

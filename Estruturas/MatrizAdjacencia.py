@@ -73,7 +73,7 @@ class MatrizAdjacencia:
         tempoGasto = str(round((time.time() - inicio), 5))
         print("Distancia: " + str(round(self.distanciaPercorrida, 2)))
 
-        g = nx.Graph()
+        g = nx.DiGraph()
         for v in self.veiculos:
             v.caminho[0] = "veiculo " + v.nome
             for c in v.caminho:

@@ -81,7 +81,7 @@ class MatrizAdjacencia:
             g.add_path(v.caminho)
 
         nx.draw_networkx(g, pos=nx.spring_layout(g))
-        plt.show()
+        plt.savefig("data/grafo.png")
 
         f = open(pathArquivoSaida, "a")
         f.write(str(round(self.distanciaPercorrida, 2)) + " " + tempoGasto + "\n")

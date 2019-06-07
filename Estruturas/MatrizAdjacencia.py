@@ -1,4 +1,6 @@
 import time
+import networkx as nx
+import matplotlib.pyplot as plt
 from Estruturas.Vertice import Vertice
 from Estruturas.Regiao import Regiao
 from Estruturas.Veiculo import Veiculo
@@ -70,14 +72,29 @@ class MatrizAdjacencia:
         
         tempoGasto = str(round((time.time() - inicio), 5))
         print("Distancia: " + str(round(self.distanciaPercorrida, 2)))
+
+        g = nx.Graph()
+        for v in self.veiculos:
+            v.caminho[0] = "veiculo " + v.nome
+            for c in v.caminho:
+                g.add_node(c)
+            g.add_path(v.caminho)
+
+        nx.draw_networkx(g, pos=nx.spring_layout(g))
+        plt.show()
+
         f = open(pathArquivoSaida, "a")
         f.write(str(round(self.distanciaPercorrida, 2)) + " " + tempoGasto + "\n")
-        for v in self.veiculos:
-            for c in v.caminho:
-                f.write(c + " ")
-            f.write("\n")
+        # for v in self.veiculos:
+        #     for c in v.caminho:
+        #         f.write(c + " ")
+        #     f.write("\n")
         f.close()
 
+    def encontrarVertice(self, nome):
+        for v in self.vertices:
+            if(v.nome == nome):
+                return v
     def encontraCaminho(self, pathArquivoSaida):
         while(len(self.regioesNaoVisitadas) > 0):
             melhorVeiculo = Veiculo
@@ -127,7 +144,6 @@ class MatrizAdjacencia:
     def resetaVeiculo(self, veiculo):
         veiculo.capacidade = self.capacidadeVeiculo
         self.distanciaPercorrida += self.matriz[veiculo.verticeAtual][self.vertices[0]]
-        veiculo.caminho.append(self.vertices[0].nome)
 
     def escolherVertice(self, veiculo):
         verticeCandidato = None

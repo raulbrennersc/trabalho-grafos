@@ -29,9 +29,7 @@ class MatrizAdjacencia:
             v.caminho = [vertices[0].nome]
             self.veiculos.append(v)
 
-        for r in self.regioes:
-            if(r.demanda <= 0):
-                self.regioesNaoVisitadas.remove(r)
+        self.vertices[0].regiao.visitada = True
 
         self.calcularMenorDemanda()
 
@@ -83,6 +81,7 @@ class MatrizAdjacencia:
             melhorVeiculo.capacidade -= melhorVertice.regiao.demanda
             melhorVeiculo.caminho.append(melhorVertice.nome)
             melhorVertice.regiao.demanda = 0
+            melhorVertice.regiao.visitada = True
             melhorVeiculo.verticeAtual = melhorVertice
             self.regioesNaoVisitadas.remove(melhorVertice.regiao)
             self.calcularMenorDemanda()
@@ -90,7 +89,7 @@ class MatrizAdjacencia:
         self.resetaVeiculos()
         
         print("Distancia: " + str(self.distanciaPercorrida))
-        f = open(pathArquivoSaida, "w")
+        f = open(pathArquivoSaida, "a")
         f.write(str(self.distanciaPercorrida))
         f.write("\n")
         for v in self.veiculos:
@@ -113,7 +112,7 @@ class MatrizAdjacencia:
         verticeCandidato = None
         verticeAtual = veiculo.verticeAtual
         for v in self.vertices:
-            if(v.regiao != verticeAtual.regiao and v.regiao.demanda > 0 and veiculo.capacidade >= v.regiao.demanda):
+            if(v.regiao != verticeAtual.regiao and (not v.regiao.visitada) and veiculo.capacidade >= v.regiao.demanda):
                 if((verticeCandidato == None) or (self.matriz[verticeAtual][v] < self.matriz[verticeAtual][verticeCandidato])):
                     verticeCandidato = v
         return verticeCandidato

@@ -17,6 +17,9 @@ def main():
     file = open(pathArquivoEntrada, "r")
     rawLines = file.readlines()
     file.close()
+    file = open(pathArquivoSaida, "a")
+    file.write(sys.argv[2].split("/").pop() + "\n")
+    file.close()
     for line in rawLines:
         lines.append(line.replace("\n", ""))
     lines.reverse()

@@ -70,7 +70,6 @@ def main():
 
     matriz.calcularDistancias()
     matriz.encontraCaminho2(pathArquivoSaida)
-    #matriz.imprimirVertices(pathArquivoSaida)
     end = time.time()
     timeElapsed = round((end-start), 5)
     print("\nExecutado em: " + str(timeElapsed) + " segundos")

@@ -69,7 +69,7 @@ def main():
     matriz = MatrizAdjacencia(capacity, vehicles_count, vertices, regioes)
 
     matriz.calcularDistancias()
-    matriz.encontraCaminho(pathArquivoSaida)
+    matriz.encontraCaminho2(pathArquivoSaida)
     #matriz.imprimirVertices(pathArquivoSaida)
     end = time.time()
     timeElapsed = round((end-start), 5)

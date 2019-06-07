@@ -25,7 +25,7 @@ class MatrizAdjacencia:
 
         for i in range(0, quantidadeVeiculos):
             v = Veiculo(capacidadeVeiculo, self.vertices[0])
-            v.nome = i
+            v.nome = str(i)
             v.caminho = [vertices[0].nome]
             self.veiculos.append(v)
 
@@ -47,6 +47,35 @@ class MatrizAdjacencia:
     def adicionaRegiao(self, r):
         self.regioes.append(r)
 
+
+    def encontraCaminho2(self, pathArquivoSaida):
+        for veiculo in self.veiculos:
+            while(veiculo.capacidade >= self.menorDemanda.demanda and len(self.regioesNaoVisitadas) > 0):
+                melhorVertice =  self.escolherVertice(veiculo)
+                if(melhorVertice == None):
+                    break
+                melhorDistancia = self.matriz[veiculo.verticeAtual][melhorVertice]
+                self.distanciaPercorrida += melhorDistancia
+                veiculo.capacidade -= melhorVertice.regiao.demanda
+                veiculo.caminho.append(melhorVertice.nome)
+                melhorVertice.regiao.demanda = 0
+                melhorVertice.regiao.visitada = True
+                veiculo.verticeAtual = melhorVertice
+                self.regioesNaoVisitadas.remove(melhorVertice.regiao)
+                self.calcularMenorDemanda()
+        
+        self.resetaVeiculos()
+        
+        print("Distancia: " + str(self.distanciaPercorrida))
+        f = open(pathArquivoSaida, "a")
+        f.write(str(self.distanciaPercorrida))
+        f.write("\n")
+        for v in self.veiculos:
+            for c in v.caminho:
+                f.write(c + " ")
+            f.write("\n")
+        f.close()
+
     def encontraCaminho(self, pathArquivoSaida):
         while(len(self.regioesNaoVisitadas) > 0):
             melhorVeiculo = Veiculo
@@ -67,16 +96,6 @@ class MatrizAdjacencia:
                     melhorVeiculo = veiculo
                     melhorVertice = verticeCandidato
                     melhorDistancia = self.matriz[melhorVeiculo.verticeAtual][melhorVertice]
-            print("Regioes")
-            for r in self.regioesNaoVisitadas:
-                print(r.nome)
-                print(r.demanda)
-                print("------------------")
-            print("Veiculos")
-            for v in self.veiculos:
-                print(v.nome)
-                print(v.capacidade)
-                print("------------------")
             self.distanciaPercorrida += melhorDistancia
             melhorVeiculo.capacidade -= melhorVertice.regiao.demanda
             melhorVeiculo.caminho.append(melhorVertice.nome)
@@ -116,6 +135,21 @@ class MatrizAdjacencia:
                 if((verticeCandidato == None) or (self.matriz[verticeAtual][v] < self.matriz[verticeAtual][verticeCandidato])):
                     verticeCandidato = v
         return verticeCandidato
+
+    def simulaEscolha(self, veiculo, vertice):
+        capacidadeSimulada = veiculo.capacidade - vertice.regiao.demanda
+        for r in self.regioesNaoVisitadas:
+            possivel = False
+            demanda = (0 if(r.nome == vertice.regiao.nome) else r.demanda)
+            for v in self.veiculos:
+                capacidade = (capacidadeSimulada if(v.nome == veiculo.nome) else v.capacidade)
+                if(capacidade >= demanda):
+                    possivel = True
+                    break
+            if(not possivel):
+                return False
+            
+        return True
 
     def parPerfeito(self, veiculo):
         melhorVertice = None

@@ -51,7 +51,7 @@ class MatrizAdjacencia:
         self.regioes.append(r)
 
 
-    def encontraCaminho2(self, pathArquivoSaida):
+    def encontraCaminho2(self, pathArquivoSaida, pathImgSol, pathImgCaminho):
         inicio = time.time()
         for veiculo in self.veiculos:
             while(veiculo.capacidade >= self.menorDemanda.demanda and len(self.regioesNaoVisitadas) > 0):
@@ -70,25 +70,28 @@ class MatrizAdjacencia:
         
         self.resetaVeiculos()
         
-        tempoGasto = str(round((time.time() - inicio), 5))
+        timeElapsed = str(round((time.time() - inicio), 5))
+        print("\nExecutado em: " + str(timeElapsed) + " segundos")
         print("Distancia: " + str(round(self.distanciaPercorrida, 2)))
 
-        g = nx.DiGraph()
-        for v in self.veiculos:
-            v.caminho[0] = "veiculo " + v.nome
-            for c in v.caminho:
-                g.add_node(c)
-            g.add_path(v.caminho)
 
+<<<<<<< HEAD
         nx.draw_networkx(g, pos=nx.spring_layout(g))
         plt.savefig("data/grafo.png")
+=======
+        if(pathImgCaminho is not ""):
+            g = nx.DiGraph()
+            for v in self.veiculos:
+                v.caminho[0] = "veiculo " + v.nome
+                for c in v.caminho:
+                    g.add_node(c)
+                g.add_path(v.caminho)
+            nx.draw_networkx(g, pos=nx.spring_layout(g))
+            plt.savefig(pathImgCaminho)
+>>>>>>> b69a377f0530ce1f64c3a667df9528c792fb1614
 
         f = open(pathArquivoSaida, "a")
-        f.write(str(round(self.distanciaPercorrida, 2)) + " " + tempoGasto + "\n")
-        # for v in self.veiculos:
-        #     for c in v.caminho:
-        #         f.write(c + " ")
-        #     f.write("\n")
+        f.write(str(round(self.distanciaPercorrida, 2)) + " " + timeElapsed + "\n")
         f.close()
 
     def encontrarVertice(self, nome):

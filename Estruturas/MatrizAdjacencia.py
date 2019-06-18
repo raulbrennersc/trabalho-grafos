@@ -79,6 +79,7 @@ class MatrizAdjacencia:
             g = nx.DiGraph()
             for v in self.veiculos:
                 v.caminho[0] = "veiculo " + v.nome
+                v.caminho[len(v.caminho) - 1] = "veiculo " + v.nome
                 for c in v.caminho:
                     g.add_node(c)
                 g.add_path(v.caminho)
@@ -142,6 +143,7 @@ class MatrizAdjacencia:
     def resetaVeiculo(self, veiculo):
         veiculo.capacidade = self.capacidadeVeiculo
         self.distanciaPercorrida += self.matriz[veiculo.verticeAtual][self.vertices[0]]
+        veiculo.caminho.append('1')
 
     def escolherVertice(self, veiculo):
         verticeCandidato = None

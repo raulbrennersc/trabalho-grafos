@@ -51,7 +51,7 @@ class MatrizAdjacencia:
         self.regioes.append(r)
 
 
-    def encontraCaminho2(self, pathArquivoSaida):
+    def encontraCaminho2(self, pathArquivoSaida, pathImgSol, pathImgCaminho):
         inicio = time.time()
         for veiculo in self.veiculos:
             while(veiculo.capacidade >= self.menorDemanda.demanda and len(self.regioesNaoVisitadas) > 0):
@@ -81,14 +81,10 @@ class MatrizAdjacencia:
             g.add_path(v.caminho)
 
         nx.draw_networkx(g, pos=nx.spring_layout(g))
-        plt.show()
+        plt.savefig(pathImgCaminho)
 
         f = open(pathArquivoSaida, "a")
         f.write(str(round(self.distanciaPercorrida, 2)) + " " + tempoGasto + "\n")
-        # for v in self.veiculos:
-        #     for c in v.caminho:
-        #         f.write(c + " ")
-        #     f.write("\n")
         f.close()
 
     def encontrarVertice(self, nome):

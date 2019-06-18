@@ -5,8 +5,6 @@ from Estruturas.Regiao import Regiao
 from Estruturas.MatrizAdjacencia import MatrizAdjacencia
 
 def main():
-    start = time.time()
-    print("START")
     pathArquivoEntrada = ""
     pathArquivoSaida = ""
     pathImgSol = ""
@@ -83,7 +81,5 @@ def main():
     matriz.calcularDistancias()
     matriz.encontraCaminho2(pathArquivoSaida, pathImgSol, pathImgCaminho)
     end = time.time()
-    timeElapsed = round((end-start), 5)
-    print("\nExecutado em: " + str(timeElapsed) + " segundos")
 
 main()

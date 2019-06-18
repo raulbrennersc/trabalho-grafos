@@ -70,7 +70,8 @@ class MatrizAdjacencia:
         
         self.resetaVeiculos()
         
-        tempoGasto = str(round((time.time() - inicio), 5))
+        timeElapsed = str(round((time.time() - inicio), 5))
+        print("\nExecutado em: " + str(timeElapsed) + " segundos")
         print("Distancia: " + str(round(self.distanciaPercorrida, 2)))
 
 
@@ -82,10 +83,10 @@ class MatrizAdjacencia:
                     g.add_node(c)
                 g.add_path(v.caminho)
             nx.draw_networkx(g, pos=nx.spring_layout(g))
-            plt.savefig(pathImgCaminho)
+            #plt.savefig(pathImgCaminho)
 
         f = open(pathArquivoSaida, "a")
-        f.write(str(round(self.distanciaPercorrida, 2)) + " " + tempoGasto + "\n")
+        f.write(str(round(self.distanciaPercorrida, 2)) + " " + timeElapsed + "\n")
         f.close()
 
     def encontrarVertice(self, nome):

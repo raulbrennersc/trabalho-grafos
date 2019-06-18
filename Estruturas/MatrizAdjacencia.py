@@ -75,10 +75,6 @@ class MatrizAdjacencia:
         print("Distancia: " + str(round(self.distanciaPercorrida, 2)))
 
 
-<<<<<<< HEAD
-        nx.draw_networkx(g, pos=nx.spring_layout(g))
-        plt.savefig("data/grafo.png")
-=======
         if(pathImgCaminho is not ""):
             g = nx.DiGraph()
             for v in self.veiculos:
@@ -88,7 +84,6 @@ class MatrizAdjacencia:
                 g.add_path(v.caminho)
             nx.draw_networkx(g, pos=nx.spring_layout(g))
             plt.savefig(pathImgCaminho)
->>>>>>> b69a377f0530ce1f64c3a667df9528c792fb1614
 
         f = open(pathArquivoSaida, "a")
         f.write(str(round(self.distanciaPercorrida, 2)) + " " + timeElapsed + "\n")

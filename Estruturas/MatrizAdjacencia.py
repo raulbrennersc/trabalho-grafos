@@ -71,7 +71,7 @@ class MatrizAdjacencia:
         
         timeElapsed = str(round((time.time() - inicio), 5))
         print("\nExecutado em: " + str(timeElapsed) + " segundos")
-        print("Distancia: " + str(round(self.distanciaPercorrida, 2)))
+        print("Distância: " + str(round(self.distanciaPercorrida, 2)))
 
         if(pathImgCaminho is not ""):
             g = igraph.Graph(directed=True)

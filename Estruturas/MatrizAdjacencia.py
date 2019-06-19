@@ -73,6 +73,13 @@ class MatrizAdjacencia:
         print("\nExecutado em: " + str(timeElapsed) + " segundos")
         print("Distância: " + str(round(self.distanciaPercorrida, 2)))
 
+        f = open(pathImgSol, "a")
+        for v in self.veiculos:
+            for c in v.caminho:
+                f.write(c + " ")
+            f.write("\n")
+        f.close()
+        
         if(pathImgCaminho is not ""):
             g = igraph.Graph(directed=True)
             labels = []
@@ -91,6 +98,7 @@ class MatrizAdjacencia:
         f = open(pathArquivoSaida, "a")
         f.write(str(round(self.distanciaPercorrida, 2)) + " " + timeElapsed + "\n")
         f.close()
+
 
     def encontrarVertice(self, nome):
         for v in self.vertices:

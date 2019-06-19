@@ -17,7 +17,7 @@ def main():
             pathArquivoSaida = sys.argv[i+1] + ".txt"
         elif(sys.argv[i] == "-img"):
             pathImgCaminho = sys.argv[i+1] + ".png"
-            pathImgSol = sys.argv[i+2] + ".png"
+            pathImgSol = sys.argv[i+2] + ".txt"
         
     vertices = []
     regioes = []

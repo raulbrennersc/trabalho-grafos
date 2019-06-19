@@ -1,6 +1,5 @@
 import time
-import networkx as nx
-import matplotlib.pyplot as plt
+import igraph
 from Estruturas.Vertice import Vertice
 from Estruturas.Regiao import Regiao
 from Estruturas.Veiculo import Veiculo
@@ -74,17 +73,20 @@ class MatrizAdjacencia:
         print("\nExecutado em: " + str(timeElapsed) + " segundos")
         print("Distancia: " + str(round(self.distanciaPercorrida, 2)))
 
-
         if(pathImgCaminho is not ""):
-            g = nx.DiGraph()
+            g = igraph.Graph(directed=True)
+            labels = []
             for v in self.veiculos:
-                v.caminho[0] = "veiculo " + v.nome
-                v.caminho[len(v.caminho) - 1] = "veiculo " + v.nome
+                v.caminho[0] = "veiculo " + str(int(v.nome) + 1)
+                aux = ""
                 for c in v.caminho:
-                    g.add_node(c)
-                g.add_path(v.caminho)
-            nx.draw_networkx(g, pos=nx.spring_layout(g))
-            plt.savefig(pathImgCaminho)
+                    labels.append(c)
+                    g.add_vertex(c)
+                    if(aux is not ""):
+                        g.add_edge(aux, c)
+                    aux = c
+                g.add_edge(aux, v.caminho[0])
+            igraph.plot(g, vertex_label=labels, target=pathImgCaminho)
 
         f = open(pathArquivoSaida, "a")
         f.write(str(round(self.distanciaPercorrida, 2)) + " " + timeElapsed + "\n")
@@ -143,7 +145,6 @@ class MatrizAdjacencia:
     def resetaVeiculo(self, veiculo):
         veiculo.capacidade = self.capacidadeVeiculo
         self.distanciaPercorrida += self.matriz[veiculo.verticeAtual][self.vertices[0]]
-        veiculo.caminho.append('1')
 
     def escolherVertice(self, veiculo):
         verticeCandidato = None

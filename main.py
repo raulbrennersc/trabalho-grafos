@@ -16,7 +16,7 @@ def main():
         elif(sys.argv[i] == "-out"):
             pathArquivoSaida = sys.argv[i+1] + ".txt"
         elif(sys.argv[i] == "-img"):
-            pathImgCaminho = sys.argv[i+1] + ".png"
+            pathImgCaminho = sys.argv[i+1]
             pathImgSol = sys.argv[i+2] + ".txt"
         
     vertices = []

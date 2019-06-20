@@ -95,7 +95,7 @@ class MatrizAdjacencia:
                 g.add_edge(aux, v.caminho[0])
             igraph.plot(g, vertex_label=labels, target=pathImgCaminho)
 
-        f = open(pathArquivoSaida, "a")
+        f = open("raul-201811101-resultados.txt", "a")
         f.write(str(round(self.distanciaPercorrida, 2)) + " " + timeElapsed + "\n")
         f.close()
 

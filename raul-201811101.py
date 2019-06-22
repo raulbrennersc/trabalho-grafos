@@ -100,6 +100,7 @@ class TrabalhoGrafos:
                 melhorVertice.regiao.visitada = True
                 veiculo.verticeAtual = melhorVertice
                 self.regioesNaoVisitadas.remove(melhorVertice.regiao)
+                #Atualiza a menor demanda entre as regiões não visitadas
                 self.calcularMenorDemanda()
         
         #Retorna todos os veículos para o vértice inicial (depósito), exceto aqueles que já estão lá

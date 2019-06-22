@@ -79,7 +79,6 @@ def main():
     matriz = MatrizAdjacencia(capacity, vehicles_count, vertices, regioes)
 
     matriz.calcularDistancias()
-    matriz.encontraCaminho2(pathArquivoSaida, pathArqSol, pathImgCaminho)
-    end = time.time()
+    matriz.encontraCaminho(pathArquivoSaida, pathArqSol, pathImgCaminho)
 
 main()

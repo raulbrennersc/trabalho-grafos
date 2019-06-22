@@ -46,11 +46,8 @@ class MatrizAdjacencia:
             if(self.menorDemanda == None or self.menorDemanda.demanda == 0 or r.demanda < self.menorDemanda.demanda):
                 self.menorDemanda = r
 
-    def adicionaRegiao(self, r):
-        self.regioes.append(r)
 
-
-    def encontraCaminho2(self, pathArquivoSaida, pathArqSol, pathImgCaminho):
+    def encontraCaminho(self, pathArquivoSaida, pathArqSol, pathImgCaminho):
         inicio = time.time()
         for veiculo in self.veiculos:
             while(veiculo.capacidade >= self.menorDemanda.demanda and len(self.regioesNaoVisitadas) > 0):
@@ -67,7 +64,7 @@ class MatrizAdjacencia:
                 self.regioesNaoVisitadas.remove(melhorVertice.regiao)
                 self.calcularMenorDemanda()
         
-        self.resetaVeiculos()
+        self.retornaVeiculos()
         
         timeElapsed = str(round((time.time() - inicio), 5))
         print("\nExecutado em: " + str(timeElapsed) + " segundos")
@@ -99,12 +96,7 @@ class MatrizAdjacencia:
         f.write(str(round(self.distanciaPercorrida, 2)) + " " + timeElapsed + "\n")
         f.close()
 
-
-    def encontrarVertice(self, nome):
-        for v in self.vertices:
-            if(v.nome == nome):
-                return v
-    def encontraCaminho(self, pathArquivoSaida):
+    def encontraCaminhoAntigo(self, pathArquivoSaida):
         while(len(self.regioesNaoVisitadas) > 0):
             melhorVeiculo = Veiculo
             melhorVertice = None
@@ -133,7 +125,7 @@ class MatrizAdjacencia:
             self.regioesNaoVisitadas.remove(melhorVertice.regiao)
             self.calcularMenorDemanda()
         
-        self.resetaVeiculos()
+        self.retornaVeiculos()
         
         print("Distancia: " + str(self.distanciaPercorrida))
         f = open(pathArquivoSaida, "a")
@@ -145,12 +137,12 @@ class MatrizAdjacencia:
             f.write("\n")
         f.close()
 
-    def resetaVeiculos(self):
+    def retornaVeiculos(self):
         for v in self.veiculos:
             if(v.verticeAtual != self.vertices[0]):
-                self.resetaVeiculo(v)
+                self.retornaVeiculo(v)
 
-    def resetaVeiculo(self, veiculo):
+    def retornaVeiculo(self, veiculo):
         veiculo.capacidade = self.capacidadeVeiculo
         self.distanciaPercorrida += self.matriz[veiculo.verticeAtual][self.vertices[0]]
 
@@ -162,21 +154,6 @@ class MatrizAdjacencia:
                 if((verticeCandidato == None) or (self.matriz[verticeAtual][v] < self.matriz[verticeAtual][verticeCandidato])):
                     verticeCandidato = v
         return verticeCandidato
-
-    def simulaEscolha(self, veiculo, vertice):
-        capacidadeSimulada = veiculo.capacidade - vertice.regiao.demanda
-        for r in self.regioesNaoVisitadas:
-            possivel = False
-            demanda = (0 if(r.nome == vertice.regiao.nome) else r.demanda)
-            for v in self.veiculos:
-                capacidade = (capacidadeSimulada if(v.nome == veiculo.nome) else v.capacidade)
-                if(capacidade >= demanda):
-                    possivel = True
-                    break
-            if(not possivel):
-                return False
-            
-        return True
 
     def parPerfeito(self, veiculo):
         melhorVertice = None
@@ -191,18 +168,6 @@ class MatrizAdjacencia:
                 break;
         return melhorVertice
 
-    def verificaVeiculos(self, verticeCanditato, veiculoCandidato, distanciaCandidata):
-        veiculoFinal = veiculoCandidato
-        distanciaFinal = distanciaCandidata
-        for veiculo in self.veiculos:
-            distanciaParcial = self.matriz[verticeCanditato][veiculo.verticeAtual]
-            if(veiculo.capacidade > verticeCanditato.demanda and distanciaParcial < distanciaFinal):
-                veiculoFinal = veiculo
-                distanciaFinal = distanciaParcial
-
-        self.distanciaPercorrida += distanciaFinal
-
-
     def calcularDistancia(self, v1, v2):
         return ((((v1.x - v2.x) ** 2) + ((v1.y - v2.y) ** 2) )** 0.5)
         
@@ -213,27 +178,4 @@ class MatrizAdjacencia:
                 d = (0 if(v1.regiao == v2.regiao) else self.calcularDistancia(v1, v2))
                 self.matriz[v1][v2] = d
                 self.matriz[v2][v1] = d
-
-#Imprime as informacoes sobre todos os vertices contidos na matriz
-    def imprimirVertices(self, pathArquivoSaida):
-        f = open(pathArquivoSaida, "w")
-        for v in self.vertices:
-            f.write(v.nome + ": Regiao: " + v.regiao.nome + "\n")
-        f.close()
-
-
-    def __str__(self):
-        saida = "\t"
-        for linha in self.matriz:
-            saida += str(linha) + "\t"
-        saida += "\n"
-        for coluna in self.matriz:
-            saida += str(coluna)
-            for linha in self.matriz:
-                saida += ("\t" + str(self.matriz[linha][coluna]))
-            saida += "\n"
-        return saida
-
-    def saoConterraneos(self, v1, v2):
-        return v1.regiao.nome == v2.regiao.nome
 

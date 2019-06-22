@@ -1,5 +1,7 @@
 import sys
 import time
+import igraph
+
 class Regiao:
     nome = None
     demanda = 0
@@ -24,6 +26,16 @@ class Vertice:
         self.regiao = Regiao("0", "")
         self.x = x
         self.y = y
+
+class Veiculo:
+    capacidade = 0
+    verticeAtual = Vertice
+    caminho = []
+
+
+    def __init__(self, capacidade, vertice):
+        self.capacidade = capacidade
+        self.verticeAtual = vertice
 
 class MatrizAdjacencia:
     matriz = None
@@ -67,11 +79,8 @@ class MatrizAdjacencia:
             if(self.menorDemanda == None or self.menorDemanda.demanda == 0 or r.demanda < self.menorDemanda.demanda):
                 self.menorDemanda = r
 
-    def adicionaRegiao(self, r):
-        self.regioes.append(r)
-
-
-    def encontraCaminho2(self, pathArquivoSaida):
+    def encontraCaminho(self, pathArquivoSaida, pathArqSol, pathImgCaminho):
+        inicio = time.time()
         for veiculo in self.veiculos:
             while(veiculo.capacidade >= self.menorDemanda.demanda and len(self.regioesNaoVisitadas) > 0):
                 melhorVertice =  self.escolherVertice(veiculo)
@@ -87,68 +96,44 @@ class MatrizAdjacencia:
                 self.regioesNaoVisitadas.remove(melhorVertice.regiao)
                 self.calcularMenorDemanda()
         
-        self.resetaVeiculos()
+        self.retornaVeiculos()
         
-        print("Distancia: " + str(self.distanciaPercorrida))
-        f = open(pathArquivoSaida, "a")
-        f.write(str(self.distanciaPercorrida))
-        f.write("\n")
+        timeElapsed = str(round((time.time() - inicio), 5))
+
+        f = open(pathArqSol, "w")
         for v in self.veiculos:
             for c in v.caminho:
                 f.write(c + " ")
             f.write("\n")
         f.close()
-
-    def encontraCaminho(self, pathArquivoSaida):
-        while(len(self.regioesNaoVisitadas) > 0):
-            melhorVeiculo = Veiculo
-            melhorVertice = None
-            melhorDistancia = 0
-            for veiculo in self.veiculos:
-                parPerfeito = self.parPerfeito(veiculo)
-                if(parPerfeito != None):
-                    melhorVeiculo = veiculo
-                    melhorVertice = parPerfeito
-                    melhorDistancia = self.matriz[melhorVeiculo.verticeAtual][melhorVertice]
-                    break
-
-                verticeCandidato =  self.escolherVertice(veiculo)
-                if(verticeCandidato == None):
-                    continue
-                if((melhorVertice == None) or (self.matriz[veiculo.verticeAtual][verticeCandidato] < melhorDistancia)):
-                    melhorVeiculo = veiculo
-                    melhorVertice = verticeCandidato
-                    melhorDistancia = self.matriz[melhorVeiculo.verticeAtual][melhorVertice]
-            self.distanciaPercorrida += melhorDistancia
-            melhorVeiculo.capacidade -= melhorVertice.regiao.demanda
-            melhorVeiculo.caminho.append(melhorVertice.nome)
-            melhorVertice.regiao.demanda = 0
-            melhorVertice.regiao.visitada = True
-            melhorVeiculo.verticeAtual = melhorVertice
-            self.regioesNaoVisitadas.remove(melhorVertice.regiao)
-            self.calcularMenorDemanda()
         
-        self.resetaVeiculos()
-        
-        print("Distancia: " + str(self.distanciaPercorrida))
+        if(pathImgCaminho is not ""):
+            g = igraph.Graph(directed=True)
+            labels = []
+            for v in self.veiculos:
+                v.caminho[0] = "veiculo " + str(int(v.nome) + 1)
+                aux = ""
+                for c in v.caminho:
+                    labels.append(c)
+                    g.add_vertex(c)
+                    if(aux is not ""):
+                        g.add_edge(aux, c)
+                    aux = c
+                g.add_edge(aux, v.caminho[0])
+            igraph.plot(g, vertex_label=labels, target=pathImgCaminho)
+
         f = open(pathArquivoSaida, "a")
-        f.write(str(self.distanciaPercorrida))
-        f.write("\n")
-        for v in self.veiculos:
-            for c in v.caminho:
-                f.write(c + " ")
-            f.write("\n")
+        f.write(str(round(self.distanciaPercorrida, 2)) + " " + timeElapsed + "\n")
         f.close()
 
-    def resetaVeiculos(self):
+    def retornaVeiculos(self):
         for v in self.veiculos:
             if(v.verticeAtual != self.vertices[0]):
-                self.resetaVeiculo(v)
+                self.retornaVeiculo(v)
 
-    def resetaVeiculo(self, veiculo):
+    def retornaVeiculo(self, veiculo):
         veiculo.capacidade = self.capacidadeVeiculo
         self.distanciaPercorrida += self.matriz[veiculo.verticeAtual][self.vertices[0]]
-        veiculo.caminho.append(self.vertices[0].nome)
 
     def escolherVertice(self, veiculo):
         verticeCandidato = None
@@ -158,46 +143,6 @@ class MatrizAdjacencia:
                 if((verticeCandidato == None) or (self.matriz[verticeAtual][v] < self.matriz[verticeAtual][verticeCandidato])):
                     verticeCandidato = v
         return verticeCandidato
-
-    def simulaEscolha(self, veiculo, vertice):
-        capacidadeSimulada = veiculo.capacidade - vertice.regiao.demanda
-        for r in self.regioesNaoVisitadas:
-            possivel = False
-            demanda = (0 if(r.nome == vertice.regiao.nome) else r.demanda)
-            for v in self.veiculos:
-                capacidade = (capacidadeSimulada if(v.nome == veiculo.nome) else v.capacidade)
-                if(capacidade >= demanda):
-                    possivel = True
-                    break
-            if(not possivel):
-                return False
-            
-        return True
-
-    def parPerfeito(self, veiculo):
-        melhorVertice = None
-        for r in self.regioesNaoVisitadas:
-            if(r.demanda == veiculo.capacidade):
-                for v in self.vertices:
-                    if(v.regiao.nome != r.nome):
-                        continue
-                    if(melhorVertice == None or (self.matriz[veiculo.verticeAtual][v] <  self.matriz[veiculo.verticeAtual][melhorVertice])):
-                        melhorVertice = v
-            if(melhorVertice != None):
-                break;
-        return melhorVertice
-
-    def verificaVeiculos(self, verticeCanditato, veiculoCandidato, distanciaCandidata):
-        veiculoFinal = veiculoCandidato
-        distanciaFinal = distanciaCandidata
-        for veiculo in self.veiculos:
-            distanciaParcial = self.matriz[verticeCanditato][veiculo.verticeAtual]
-            if(veiculo.capacidade > verticeCanditato.demanda and distanciaParcial < distanciaFinal):
-                veiculoFinal = veiculo
-                distanciaFinal = distanciaParcial
-
-        self.distanciaPercorrida += distanciaFinal
-
 
     def calcularDistancia(self, v1, v2):
         return ((((v1.x - v2.x) ** 2) + ((v1.y - v2.y) ** 2) )** 0.5)
@@ -210,46 +155,21 @@ class MatrizAdjacencia:
                 self.matriz[v1][v2] = d
                 self.matriz[v2][v1] = d
 
-#Imprime as informacoes sobre todos os vertices contidos na matriz
-    def imprimirVertices(self, pathArquivoSaida):
-        f = open(pathArquivoSaida, "w")
-        for v in self.vertices:
-            f.write(v.nome + ": Regiao: " + v.regiao.nome + "\n")
-        f.close()
-
-
-    def __str__(self):
-        saida = "\t"
-        for linha in self.matriz:
-            saida += str(linha) + "\t"
-        saida += "\n"
-        for coluna in self.matriz:
-            saida += str(coluna)
-            for linha in self.matriz:
-                saida += ("\t" + str(self.matriz[linha][coluna]))
-            saida += "\n"
-        return saida
-
-    def saoConterraneos(self, v1, v2):
-        return v1.regiao.nome == v2.regiao.nome
-
-
-
-class Veiculo:
-    capacidade = 0
-    verticeAtual = Vertice
-    caminho = []
-
-
-    def __init__(self, capacidade, vertice):
-        self.capacidade = capacidade
-        self.verticeAtual = vertice
-
 def main():
-    start = time.time()
-    print("START")
-    pathArquivoEntrada = sys.argv[2] + ".txt"
-    pathArquivoSaida = sys.argv[4] + ".txt"
+    pathArquivoEntrada = ""
+    pathArquivoSaida = ""
+    pathArqSol = ""
+    pathImgCaminho = ""
+
+    for i in range(0, len(sys.argv)):
+        if(sys.argv[i] == "-in"):
+            pathArquivoEntrada = sys.argv[i+1] + ".txt"
+        elif(sys.argv[i] == "-out"):
+            pathArquivoSaida = sys.argv[i+1] + ".txt"
+        elif(sys.argv[i] == "-img"):
+            pathImgCaminho = sys.argv[i+1]
+            pathArqSol = sys.argv[i+2] + ".txt"
+        
     vertices = []
     regioes = []
     lines = []
@@ -259,7 +179,7 @@ def main():
     rawLines = file.readlines()
     file.close()
     file = open(pathArquivoSaida, "a")
-    file.write(sys.argv[2].split("/").pop() + "\n")
+    file.write(sys.argv[2].split("/").pop() + " ")
     file.close()
     for line in rawLines:
         lines.append(line.replace("\n", ""))
@@ -310,9 +230,6 @@ def main():
     matriz = MatrizAdjacencia(capacity, vehicles_count, vertices, regioes)
 
     matriz.calcularDistancias()
-    matriz.encontraCaminho2(pathArquivoSaida)
-    end = time.time()
-    timeElapsed = round((end-start), 5)
-    print("\nExecutado em: " + str(timeElapsed) + " segundos")
+    matriz.encontraCaminho(pathArquivoSaida, pathArqSol, pathImgCaminho)
 
 main()

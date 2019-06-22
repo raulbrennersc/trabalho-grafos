@@ -90,6 +90,7 @@ class TrabalhoGrafos:
             #Nem sempre todos os veículos serão utilizados
             while(veiculo.capacidade >= self.menorDemanda.demanda and len(self.regioesNaoVisitadas) > 0):
                 melhorVertice =  self.escolherVertice(veiculo)
+                #Quando não existe um melhor vértice significa que todas as regiões foram atendidas
                 if(melhorVertice == None):
                     break
                 melhorDistancia = self.matriz[veiculo.verticeAtual][melhorVertice]

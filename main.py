@@ -7,7 +7,7 @@ from Estruturas.MatrizAdjacencia import MatrizAdjacencia
 def main():
     pathArquivoEntrada = ""
     pathArquivoSaida = ""
-    pathImgSol = ""
+    pathArqSol = ""
     pathImgCaminho = ""
 
     for i in range(0, len(sys.argv)):
@@ -17,7 +17,7 @@ def main():
             pathArquivoSaida = sys.argv[i+1] + ".txt"
         elif(sys.argv[i] == "-img"):
             pathImgCaminho = sys.argv[i+1]
-            pathImgSol = sys.argv[i+2] + ".txt"
+            pathArqSol = sys.argv[i+2] + ".txt"
         
     vertices = []
     regioes = []
@@ -79,7 +79,7 @@ def main():
     matriz = MatrizAdjacencia(capacity, vehicles_count, vertices, regioes)
 
     matriz.calcularDistancias()
-    matriz.encontraCaminho2(pathArquivoSaida, pathImgSol, pathImgCaminho)
+    matriz.encontraCaminho2(pathArquivoSaida, pathArqSol, pathImgCaminho)
     end = time.time()
 
 main()

@@ -50,7 +50,7 @@ class MatrizAdjacencia:
         self.regioes.append(r)
 
 
-    def encontraCaminho2(self, pathArquivoSaida, pathImgSol, pathImgCaminho):
+    def encontraCaminho2(self, pathArquivoSaida, pathArqSol, pathImgCaminho):
         inicio = time.time()
         for veiculo in self.veiculos:
             while(veiculo.capacidade >= self.menorDemanda.demanda and len(self.regioesNaoVisitadas) > 0):
@@ -73,7 +73,7 @@ class MatrizAdjacencia:
         print("\nExecutado em: " + str(timeElapsed) + " segundos")
         print("Distância: " + str(round(self.distanciaPercorrida, 2)))
 
-        f = open(pathImgSol, "a")
+        f = open(pathArqSol, "w")
         for v in self.veiculos:
             for c in v.caminho:
                 f.write(c + " ")
